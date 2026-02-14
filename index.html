@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Love ❤️</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#ff758c,#ff7eb3);
+    overflow:hidden;
+    color:white;
+}
+
+.section{
+    position:relative;
+    width:100%;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+}
+
+.hidden{display:none;}
+
+h1{font-size:28px;margin-bottom:15px;}
+h2{font-size:22px;margin:10px 0;}
+p{font-size:16px;margin-bottom:15px;}
+
+button{
+    padding:12px 22px;
+    font-size:16px;
+    border:none;
+    border-radius:30px;
+    margin:8px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+button:active{transform:scale(0.95);}
+
+.yes{background:white;color:#ff4b6e;}
+.no{
+    background:#ff4b6e;
+    color:white;
+    position:absolute;
+}
+
+img{
+    width:80%;
+    max-width:280px;
+    border-radius:20px;
+    margin:15px 0;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* Tim bay */
+.heart{
+    position:absolute;
+    bottom:-20px;
+    animation:rise 5s linear forwards;
+}
+
+@keyframes rise{
+    0%{transform:translateY(0);opacity:1;}
+    100%{transform:translateY(-110vh);opacity:0;}
+}
+
+/* Chữ trêu */
+#teaseText{
+    position:absolute;
+    bottom:25%;
+    font-size:20px;
+    font-weight:bold;
+    opacity:0;
+}
+
+.shake{
+    animation:shake 0.4s;
+}
+
+@keyframes shake{
+    0%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    50%{transform:translateX(5px);}
+    75%{transform:translateX(-5px);}
+    100%{transform:translateX(0);}
+}
+
+/* Pháo hoa */
+.firework{
+    position:absolute;
+    font-size:25px;
+    animation:explode 1.2s forwards;
+}
+
+@keyframes explode{
+    0%{transform:scale(0);opacity:1;}
+    100%{transform:scale(3);opacity:0;}
+}
+</style>
+</head>
+<body>
+
+<audio autoplay loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div class="section" id="page1">
+<h1>Chào em ❤️</h1>
+<p>Anh có điều này muốn nói...</p>
+<button class="yes" onclick="nextPage()">Bấm vào đây</button>
+</div>
+
+<div class="section hidden" id="page2">
+<h2>Chúng ta đã bên nhau</h2>
+<h1 id="days"></h1>
+<p>và anh vẫn muốn nhiều hơn thế nữa ❤️</p>
+<button class="yes" onclick="nextPage2()">Tiếp tục</button>
+</div>
+
+<div class="section hidden" id="page3">
+<h2>8 tháng vừa qua...</h2>
+<p>Tuy anh chưa hoàn hảo nhưng cảm ơn em vì đã ở lại và yêu anh ❤️</p>
+
+<img id="slide" src="1.jpg">
+
+<h2>Em có yêu anh không? 😌</h2>
+
+<button class="yes" onclick="love()">Có ❤️</button>
+<button class="no"
+onclick="moveButton(this)"
+ontouchstart="moveButton(this)">
+Không 😆
+</button>
+
+<p id="teaseText"></p>
+</div>
+
+<div class="section hidden" id="page4">
+<h1>Anh biết mà 😎❤️</h1>
+<h2>Happy Valentine 💕</h2>
+<p>Anh muốn cùng em đi tiếp thật lâu nữa, YÊU BÉ HEO.</p>
+</div>
+
+<script>
+// ===== CHỈNH NGÀY YÊU =====
+let loveDate=new Date("2025-06-15");
+
+function updateDays(){
+let today=new Date();
+let diff=today-loveDate;
+let days=Math.floor(diff/(1000*60*60*24));
+document.getElementById("days").innerText=days+" ngày ❤️";
+}
+updateDays();
+
+function nextPage(){
+page1.classList.add("hidden");
+page2.classList.remove("hidden");
+}
+
+function nextPage2(){
+page2.classList.add("hidden");
+page3.classList.remove("hidden");
+
+let noBtn=document.querySelector(".no");
+noBtn.style.left="50%";
+noBtn.style.top="75%";
+noBtn.style.transform="translate(-50%,-50%)";
+}
+
+// Slideshow
+let images=["1.jpg","2.jpg","3.jpg"];
+let index=0;
+setInterval(()=>{
+index=(index+1)%images.length;
+document.getElementById("slide").src=images[index];
+},3000);
+
+// Câu trêu random
+let teaseList=[
+"Em thật hư đó nha 😝",
+"Không được đâu nha 😏",
+"Anh không tin đâu 😆",
+"Bấm Có đi màaa 😳",
+"Đừng trêu anh nữa 😤"
+];
+
+let teaseCount=0;
+
+function moveButton(btn){
+
+// Hiện chữ trêu
+let text=document.getElementById("teaseText");
+text.innerText=teaseList[teaseCount%teaseList.length];
+teaseCount++;
+
+text.style.opacity=1;
+text.classList.add("shake");
+
+setTimeout(()=>{
+text.style.opacity=0;
+text.classList.remove("shake");
+},1200);
+
+// Tim bay nhiều hơn
+for(let i=0;i<5;i++) createHeart();
+
+// Di chuyển nút
+const maxX=window.innerWidth-btn.offsetWidth;
+const maxY=window.innerHeight-btn.offsetHeight;
+
+btn.style.left=Math.random()*maxX+"px";
+btn.style.top=Math.random()*maxY+"px";
+btn.style.transform="none";
+}
+
+// Bấm Có
+function love(){
+page3.classList.add("hidden");
+page4.classList.remove("hidden");
+
+// Pháo hoa
+for(let i=0;i<15;i++){
+let fire=document.createElement("div");
+fire.classList.add("firework");
+fire.innerHTML="🎆";
+fire.style.left=Math.random()*100+"vw";
+fire.style.top=Math.random()*80+"vh";
+document.body.appendChild(fire);
+setTimeout(()=>fire.remove(),1200);
+}
+}
+
+// Tim bay
+function createHeart(){
+let heart=document.createElement("div");
+heart.classList.add("heart");
+heart.innerHTML="❤️";
+heart.style.left=Math.random()*100+"vw";
+heart.style.fontSize=Math.random()*20+15+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),5000);
+}
+
+setInterval(createHeart,300);
+
+</script>
+
+</body>
+</html>
